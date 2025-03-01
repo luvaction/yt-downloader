@@ -1,4 +1,3 @@
-// downloader.js
 const youtubedl = require("youtube-dl-exec");
 const os = require("os");
 const path = require("path");
