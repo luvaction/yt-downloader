@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>YouTube Downloader</title>
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>YouTube Downloader</h1>
+      <p class="sub-title">유튜브 영상 URL과 원하는 파일명을 입력하고, 다운로드 유형을 선택하세요.</p>
+      <form id="downloadForm">
+        <div class="form-group">
+          <label for="videoUrl">유튜브 영상 URL</label>
+          <input type="url" id="videoUrl" name="videoUrl" placeholder="https://www.youtube.com/..." required />
+        </div>
+        <div class="form-group">
+          <label for="filename">파일명 (확장자 제외)</label>
+          <input type="text" id="filename" name="filename" placeholder="예: my_song" />
+        </div>
+        <div class="form-group radio-group">
+          <span>다운로드 유형</span>
+          <label>
+            <input type="radio" name="downloadType" value="mp3" checked />
+            MP3
+          </label>
+          <label>
+            <input type="radio" name="downloadType" value="mp4" />
+            MP4
+          </label>
+        </div>
+        <button type="submit">다운로드 시작</button>
+      </form>
+      <div id="status" class="status"></div>
+    </div>
+
+    <script>
+      const form = document.getElementById("downloadForm");
+      const statusDiv = document.getElementById("status");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        statusDiv.textContent = "다운로드 중...";
+
+        const videoUrl = document.getElementById("videoUrl").value;
+        const filename = document.getElementById("filename").value;
+        const downloadType = document.querySelector('input[name="downloadType"]:checked').value;
+
+        const formData = { videoUrl, filename, downloadType };
+
+        try {
+          const response = await fetch("/download", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              videoUrl: formData.videoUrl,
+              filename: formData.filename,
+              downloadType: formData.downloadType,
+              mp3: downloadType === "mp3" ? "on" : "",
+              mp4: downloadType === "mp4" ? "on" : "",
+            }),
+          });
+
+          if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error || "다운로드 실패");
+          }
+
+          const blob = await response.blob();
+          const contentDisposition = response.headers.get("Content-Disposition");
+          let fileName = "downloaded_file";
+          if (contentDisposition) {
+            const match = contentDisposition.match(/filename\*=UTF-8''(.+)/);
+            if (match && match[1]) fileName = decodeURIComponent(match[1]);
+          }
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+
+          alert("다운로드가 완료되었습니다.");
+          statusDiv.textContent = "";
+        } catch (error) {
+          console.error(error);
+          alert("다운로드 중 오류가 발생했습니다: " + error.message);
+          statusDiv.textContent = "";
+        }
+      });
+    </script>
+  </body>
+</html>

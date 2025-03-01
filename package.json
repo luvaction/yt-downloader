@@ -1,0 +1,17 @@
+{
+  "name": "yt-downloader-web",
+  "version": "1.0.0",
+  "description": "Express 기반 유튜브 음원/영상 스트리밍 다운로드 웹 앱",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "pm2-dev": "pm2 start app.js --name \"yt-downloader-web\" --watch"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "youtube-dl-exec": "^3.0.16"
+  },
+  "author": "",
+  "license": "ISC"
+}

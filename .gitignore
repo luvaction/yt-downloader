@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# 로그 파일
+*.log
+logs/
+
+# MacOS 관련 파일
+.DS_Store
+
+# 환경 변수 파일
+.env
+
+# npm debug 로그
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# PM2 로그
+.pm2/
+
+# 임시 파일
+tmp/
+temp/
