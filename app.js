@@ -27,7 +27,8 @@ app.post("/download", async (req, res) => {
   } else if (downloadType === "mp4") {
     ext = "mp4";
     // mergeOutputFormat 옵션을 추가하여 비디오와 오디오 스트림을 병합합니다.
-    options = { noPlaylist: true, format: "bestvideo+bestaudio", mergeOutputFormat: "mp4" };
+    // bestvideo+bestaudio가 없을 때를 대비해 best로 폴백합니다.
+    options = { noPlaylist: true, format: "bestvideo+bestaudio/best", mergeOutputFormat: "mp4" };
   } else {
     return res.status(400).json({ error: "다운로드 유형을 선택해주세요." });
   }
