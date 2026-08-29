@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "pm2-dev": "pm2 start app.js --name \"yt-downloader-web\" --watch"
+    "pm2-dev": "pm2 start app.js --name \"yt-downloader-web\" --watch",
+    "postinstall": "node -e \"require('./updater').ensureYtDlpFresh({ maxAgeMs: 0 })\"",
+    "update-ytdlp": "node -e \"require('./updater').ensureYtDlpFresh({ maxAgeMs: 0 })\""
   },
   "dependencies": {
     "body-parser": "^1.20.2",

@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
 const { downloadToTempFile } = require("./downloader");
+const { scheduleYtDlpUpdates } = require("./updater");
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -65,4 +66,6 @@ app.post("/download", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`서버가 포트 ${PORT}에서 실행 중입니다.`);
+  // YouTube 변경으로 yt-dlp가 깨지는 것을 막기 위해 기동 시 + 주기적으로 업데이트합니다.
+  scheduleYtDlpUpdates();
 });
